@@ -1,12 +1,22 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './app.html',
   styleUrl: './app.scss'
 })
 export class App {
-  protected readonly title = signal('prueba2');
+  title = 'Aplicación Angular - Ejemplo Educativo';
+  
+  // Propiedades para demostrar data binding
+  mensaje = '¡Hola! Esta es una aplicación Angular';
+  mostrarComponentes = true;
+  
+  // Método para demostrar event binding
+  toggleComponentes() {
+    this.mostrarComponentes = !this.mostrarComponentes;
+  }
 }

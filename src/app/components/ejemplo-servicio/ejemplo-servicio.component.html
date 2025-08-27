@@ -1,0 +1,233 @@
+<!-- 
+  🧩 TEMPLATE DEL COMPONENTE EJEMPLO SERVICIO
+  
+  Este template demuestra el uso de servicios en Angular
+-->
+
+<div class="ejemplo-servicio-container">
+  
+  <!-- 📊 ESTADÍSTICAS -->
+  <div class="seccion estadisticas">
+    <h3>📊 Estadísticas del Servicio</h3>
+    <div class="stats-grid">
+      <div class="stat-card total">
+        <span class="numero">{{ estadisticas.total }}</span>
+        <span class="etiqueta">Total Usuarios</span>
+      </div>
+      <div class="stat-card activos">
+        <span class="numero">{{ estadisticas.activos }}</span>
+        <span class="etiqueta">Activos</span>
+      </div>
+      <div class="stat-card inactivos">
+        <span class="numero">{{ estadisticas.inactivos }}</span>
+        <span class="etiqueta">Inactivos</span>
+      </div>
+    </div>
+    <div class="explicacion">
+      <small>💡 <strong>Servicios:</strong> Permiten centralizar la lógica de negocio y compartir datos entre componentes</small>
+    </div>
+  </div>
+
+  <!-- 🔄 LOADING STATE -->
+  <div *ngIf="loading" class="seccion loading">
+    <div class="loader">
+      <div class="spinner"></div>
+      <p>Cargando datos del servicio...</p>
+    </div>
+  </div>
+
+  <!-- 👥 LISTA DE USUARIOS -->
+  <div class="seccion usuarios" *ngIf="!loading">
+    <div class="seccion-header">
+      <h3>👥 Usuarios (desde el Servicio)</h3>
+      <button 
+        (click)="mostrarFormulario = !mostrarFormulario" 
+        class="btn btn-primary">
+        {{ mostrarFormulario ? 'Cancelar' : '+ Agregar Usuario' }}
+      </button>
+    </div>
+
+    <!-- FORMULARIO PARA NUEVO USUARIO -->
+    <div *ngIf="mostrarFormulario" class="formulario-container">
+      <h4>✨ Agregar Nuevo Usuario</h4>
+      <form (ngSubmit)="agregarUsuario()" #usuarioForm="ngForm">
+        <div class="campo">
+          <label for="nombre">Nombre:</label>
+          <input 
+            type="text" 
+            id="nombre"
+            name="nombre"
+            [(ngModel)]="nuevoUsuario.nombre"
+            #nombreInput="ngModel"
+            required
+            minlength="2"
+            placeholder="Ingresa el nombre">
+          <div *ngIf="nombreInput.invalid && nombreInput.touched" class="error">
+            El nombre es requerido (mínimo 2 caracteres)
+          </div>
+        </div>
+
+        <div class="campo">
+          <label for="email">Email:</label>
+          <input 
+            type="email" 
+            id="email"
+            name="email"
+            [(ngModel)]="nuevoUsuario.email"
+            #emailInput="ngModel"
+            required
+            email
+            placeholder="ejemplo@correo.com">
+          <div *ngIf="emailInput.invalid && emailInput.touched" class="error">
+            El email es requerido y debe ser válido
+          </div>
+        </div>
+
+        <div class="botones-formulario">
+          <button 
+            type="submit" 
+            class="btn btn-success"
+            [disabled]="usuarioForm.invalid">
+            ✅ Agregar
+          </button>
+          <button 
+            type="button" 
+            (click)="cancelarFormulario()"
+            class="btn btn-secondary">
+            ❌ Cancelar
+          </button>
+        </div>
+      </form>
+      <div class="explicacion">
+        <small>💡 <strong>Two-way binding:</strong> [(ngModel)] sincroniza el formulario con las propiedades del componente</small>
+      </div>
+    </div>
+
+    <!-- LISTA DE USUARIOS -->
+    <div class="usuarios-lista">
+      <div 
+        *ngFor="let usuario of usuarios; trackBy: trackByUsuarioId" 
+        class="usuario-card"
+        [class.activo]="usuario.activo"
+        [class.inactivo]="!usuario.activo">
+        
+        <div class="usuario-info">
+          <h4>{{ usuario.nombre }}</h4>
+          <p>{{ usuario.email }}</p>
+          <span class="estado">
+            {{ usuario.activo ? '✅ Activo' : '❌ Inactivo' }}
+          </span>
+        </div>
+        
+        <button 
+          (click)="toggleUsuario(usuario.id)"
+          class="btn"
+          [class.btn-warning]="usuario.activo"
+          [class.btn-success]="!usuario.activo">
+          {{ usuario.activo ? 'Desactivar' : 'Activar' }}
+        </button>
+      </div>
+    </div>
+    
+    <div class="explicacion">
+      <small>💡 <strong>*ngFor con trackBy:</strong> Optimiza el renderizado de listas grandes</small>
+    </div>
+  </div>
+
+  <!-- 💬 MENSAJES DEL SERVICIO -->
+  <div class="seccion mensajes">
+    <div class="seccion-header">
+      <h3>💬 Mensajes (Observables en tiempo real)</h3>
+      <div class="botones-mensajes">
+        <button 
+          (click)="agregarMensajePersonalizado()"
+          class="btn btn-info">
+          💭 Mensaje Aleatorio
+        </button>
+        <button 
+          (click)="limpiarMensajes()"
+          class="btn btn-secondary"
+          [disabled]="mensajes.length === 0">
+          🧹 Limpiar
+        </button>
+      </div>
+    </div>
+
+    <div class="mensajes-container" *ngIf="mensajes.length > 0; else noMensajes">
+      <div 
+        *ngFor="let mensaje of mensajes; trackBy: trackByMensajeId"
+        class="mensaje"
+        [ngClass]="obtenerClaseMensaje(mensaje.tipo)">
+        
+        <span class="mensaje-emoji">{{ obtenerEmojiTipo(mensaje.tipo) }}</span>
+        <div class="mensaje-contenido">
+          <p>{{ mensaje.texto }}</p>
+          <small>{{ mensaje.timestamp | date:'short' }}</small>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noMensajes>
+      <div class="no-mensajes">
+        <p>📭 No hay mensajes disponibles</p>
+      </div>
+    </ng-template>
+
+    <div class="explicacion">
+      <small>💡 <strong>Observables:</strong> Los mensajes se actualizan automáticamente usando BehaviorSubject</small>
+    </div>
+  </div>
+
+  <!-- ⚡ OPERACIÓN ASÍNCRONA -->
+  <div class="seccion operacion-asincrona">
+    <h3>⚡ Operación Asíncrona</h3>
+    <p>Demuestra cómo manejar operaciones que toman tiempo:</p>
+    
+    <button 
+      (click)="ejecutarOperacionAsincrona()"
+      class="btn btn-primary"
+      [disabled]="operacionEnProceso">
+      
+      <span *ngIf="!operacionEnProceso">🚀 Ejecutar Operación</span>
+      <span *ngIf="operacionEnProceso">
+        <span class="mini-spinner"></span>
+        Procesando...
+      </span>
+    </button>
+
+    <div class="explicacion">
+      <small>💡 <strong>Async operations:</strong> El servicio simula llamadas a APIs con delay()</small>
+    </div>
+  </div>
+
+  <!-- 🔧 EXPLICACIÓN TÉCNICA -->
+  <div class="seccion explicacion-tecnica">
+    <h3>🔧 ¿Cómo funciona este componente?</h3>
+    <div class="conceptos-grid">
+      <div class="concepto">
+        <h4>💉 Inyección de Dependencias</h4>
+        <p>El servicio se inyecta en el constructor automáticamente</p>
+        <code>constructor(private datosService: DatosService)</code>
+      </div>
+      
+      <div class="concepto">
+        <h4>🔄 Observables</h4>
+        <p>Los datos se sincronizan automáticamente usando RxJS</p>
+        <code>datosService.usuarios$.subscribe(...)</code>
+      </div>
+      
+      <div class="concepto">
+        <h4>🧹 Lifecycle Hooks</h4>
+        <p>OnInit para inicializar, OnDestroy para limpiar</p>
+        <code>ngOnInit() / ngOnDestroy()</code>
+      </div>
+      
+      <div class="concepto">
+        <h4>📋 Formularios</h4>
+        <p>Two-way binding con ngModel y validaciones</p>
+        <code>[(ngModel)]="propiedad"</code>
+      </div>
+    </div>
+  </div>
+
+</div>

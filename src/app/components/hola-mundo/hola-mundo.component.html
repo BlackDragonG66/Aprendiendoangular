@@ -1,0 +1,102 @@
+<!-- 
+  🎯 TEMPLATE DEL COMPONENTE HOLA MUNDO
+  
+  Este template demuestra los conceptos básicos de Angular:
+-->
+
+<div class="hola-mundo-container">
+  <!-- 📝 1. INTERPOLACIÓN {{ }} -->
+  <div class="seccion">
+    <h3>1️⃣ Interpolación</h3>
+    <p>{{ titulo }}, {{ usuario }}!</p>
+    <p>{{ mensaje }}</p>
+    <div class="explicacion">
+      <small>💡 <strong>Interpolación:</strong> Muestra datos del componente usando {{ '{{ variable }}' }}</small>
+    </div>
+  </div>
+
+  <!-- 📝 2. EVENT BINDING (click) -->
+  <div class="seccion">
+    <h3>2️⃣ Event Binding</h3>
+    <div class="contador-container">
+      <p>Contador: <span class="contador">{{ contador }}</span></p>
+      <div class="botones">
+        <button (click)="decrementar()" class="btn btn-danger">-</button>
+        <button (click)="resetear()" class="btn btn-secondary">Reset</button>
+        <button (click)="incrementar()" class="btn btn-success">+</button>
+      </div>
+    </div>
+    <div class="explicacion">
+      <small>💡 <strong>Event Binding:</strong> Escucha eventos usando (evento)="método()"</small>
+    </div>
+  </div>
+
+  <!-- 📝 3. PROPERTY BINDING [property] -->
+  <div class="seccion">
+    <h3>3️⃣ Property Binding</h3>
+    <button 
+      (click)="cambiarUsuario()" 
+      [disabled]="contador < 0"
+      [class.disabled]="contador < 0"
+      class="btn btn-primary">
+      Cambiar Usuario ({{ contador < 0 ? 'Deshabilitado' : 'Habilitado' }})
+    </button>
+    <div class="explicacion">
+      <small>💡 <strong>Property Binding:</strong> Vincula propiedades usando [property]="expresión"</small>
+    </div>
+  </div>
+
+  <!-- 📝 4. DIRECTIVA ESTRUCTURAL *ngIf -->
+  <div class="seccion">
+    <h3>4️⃣ Directiva *ngIf</h3>
+    <button (click)="toggleDetalles()" class="btn btn-info">
+      {{ mostrarDetalles ? 'Ocultar' : 'Mostrar' }} Detalles
+    </button>
+    
+    <div *ngIf="mostrarDetalles" class="detalles-container">
+      <h4>✨ ¡Detalles del Componente!</h4>
+      <p>Este contenido se muestra/oculta dinámicamente.</p>
+      <p>Usuario actual: <strong>{{ usuario }}</strong></p>
+      <p>Valor del contador: <strong>{{ contador }}</strong></p>
+    </div>
+    
+    <div class="explicacion">
+      <small>💡 <strong>*ngIf:</strong> Muestra/oculta elementos condicionalmente</small>
+    </div>
+  </div>
+
+  <!-- 📝 5. DIRECTIVA ESTRUCTURAL *ngFor -->
+  <div class="seccion">
+    <h3>5️⃣ Directiva *ngFor</h3>
+    <p>Tecnologías que estás aprendiendo:</p>
+    <ul class="tecnologias-lista">
+      <li *ngFor="let tecnologia of tecnologias; let i = index" class="tecnologia-item">
+        <span class="numero">{{ i + 1 }}.</span>
+        <span class="nombre">{{ tecnologia }}</span>
+      </li>
+    </ul>
+    <div class="explicacion">
+      <small>💡 <strong>*ngFor:</strong> Repite elementos para cada item en una lista</small>
+    </div>
+  </div>
+
+  <!-- 📝 6. CONDITIONAL CLASSES -->
+  <div class="seccion">
+    <h3>6️⃣ Clases Condicionales</h3>
+    <div 
+      class="estado-container"
+      [class.positivo]="contador > 0"
+      [class.negativo]="contador < 0"
+      [class.neutral]="contador === 0">
+      
+      <p>Estado del contador: 
+        <span class="estado-texto">
+          {{ contador > 0 ? '✅ Positivo' : contador < 0 ? '❌ Negativo' : '⚪ Neutral' }}
+        </span>
+      </p>
+    </div>
+    <div class="explicacion">
+      <small>💡 <strong>Clases condicionales:</strong> Aplica CSS dinámicamente según condiciones</small>
+    </div>
+  </div>
+</div>
